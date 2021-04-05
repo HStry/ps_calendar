@@ -1,0 +1,276 @@
+%!PS-Adobe-3.0
+%%Title: Weekly agenda 2021
+%%Creator: Hans Strijker
+%%Copyright: 2021 Hans Strijker
+
+%DocumentData: Clean7Bit
+%%BoundingBox: 0 0 432 576
+%%DocumentMedia: BooxNote3 432 576 0 white ()
+%Extensions: Composite
+%%Orientation: Portrait
+%%Title: Weekly agenda 2021
+%%Version: 1.0
+%
+
+(functions.inc) run
+(config.inc) run
+(weeks_) Year NumStr (.inc) JoinStr JoinStr run
+.setsafe
+
+
+
+/WeekDayHeight  94 def
+/LineHeight     12 def
+/TimeRowHeight  8 def
+/TimeRowPadding 8 def
+
+/DayHeaderWidth 32 def  % pt
+/DayHeaderHeight 2 def  % in lines
+
+/NoBuffer   [0 0 0 0] def
+/DayMargin  [1 1 1 1] def
+/DayPadding [0 4 0 0] def
+
+
+/SatMargin  [DayMargin Left 0 DayMargin Bottom DayMargin Top] def
+/SunMargin  [0 DayMargin Right DayMargin Bottom DayMargin Top] def
+
+
+
+/Page 0 0 432 576 [48 0 0 0] 0 EXT FrameDef def
+/Body Page IntX Page IntY Page IntWidth Page IntHeight 0 0 EXT FrameDef def
+/Head Page ExtX Page IntY Page Margin Left Page IntHeight 0 0 EXT FrameDef def
+
+
+
+
+/Page [[  0   0 432 576]
+       [ 48   0   0   0]
+       NoBuffer] 
+
+/Body [[Page InteriorX
+        Page InteriorY
+        Page InteriorWidth
+        Page InteriorHeight]
+       NoBuffer
+       NoBuffer] def
+
+/Head [[Page X
+        Page InteriorY
+        Page MarginLeft
+        Page InteriorHeight]
+       NoBuffer
+       NoBuffer] def
+
+/Sat [[Page InteriorX
+       Page InteriorY
+       Page InteriorWidth 2 div
+       Page InteriorHeight WeekDayHeight 5 mul sub]
+      [1 0 1 1]
+      DayPadding] def
+/Sun [[Sat X Sat Width add
+       Sat Y
+       Sat Width
+       Sat Height]
+      [0 1 1 1]
+      DayPadding] def
+/Mon [[Sat X
+       Page InteriorYmax WeekDayHeight sub
+       Page InteriorWidth
+       WeekDayHeight]
+      DayMargin
+      DayPadding] def
+/Tue [[Sat X
+       Page InteriorYmax WeekDayHeight 2 mul sub
+       Page InteriorWidth
+       WeekDayHeight]
+      DayMargin
+      DayPadding] def
+/Wed [[Sat X
+       Page InteriorYmax WeekDayHeight 3 mul sub
+       Page InteriorWidth
+       WeekDayHeight]
+      DayMargin
+      DayPadding] def
+/Thu [[Sat X
+       Page InteriorYmax WeekDayHeight 4 mul sub
+       Page InteriorWidth
+       WeekDayHeight]
+      DayMargin
+      DayPadding] def
+/Fri [[Sat X
+       Page InteriorYmax WeekDayHeight 5 mul sub
+       Page InteriorWidth
+       WeekDayHeight]
+      DayMargin
+      DayPadding] def
+
+/SolidLineStroke {
+    setlinewidth
+    1 setlinecap
+    1 setlinejoin
+    setgray
+    [] 0 setdash
+    stroke
+} def
+/DottedLineStroke {
+    setlinewidth
+    1 setlinecap
+    1 setlinejoin
+    setgray
+    [0 2] 0 setdash
+    stroke
+} def
+
+/DayBorderDraw { % <frame>
+    1 dict begin
+    /Frame exch def
+    
+    newpath
+    Frame CellX Frame CellY moveto
+    Frame CellWidth 0 rlineto
+    0 Frame CellHeight rlineto
+    0 1 SolidLineStroke
+    
+    end
+} def
+
+/DayLinesDraw { % <frame>
+    3 dict begin
+    /Frame exch def
+    /n Frame InteriorHeight TimeRowHeight sub
+                            TimeRowPadding sub
+                            LineHeight idiv def
+    /Line {
+        2 dict begin
+        /y exch def
+        /x exch def
+        x 0 rlineto
+        x neg y rmoveto
+        end
+    } def
+    
+    newpath
+    Frame InteriorX Frame InteriorY moveto
+    0 TimeRowHeight TimeRowPadding add rmoveto
+    1 1 n DayHeaderHeight sub {Frame InteriorWidth LineHeight Line} for
+    DayHeaderWidth 0 rmoveto
+    1 1 DayHeaderHeight {Frame InteriorWidth DayHeaderWidth sub LineHeight Line} for
+    0.4 0.4 DottedLineStroke
+    
+    end
+} def
+
+/DayHeaderDraw { % <frame>
+    1 dict begin
+    /Frame exch def
+    
+    
+    end
+} def
+
+/TimeRowDraw {
+    4 dict begin
+    /HalfHour exch def
+    /Frame exch def
+    /DivWidth Frame CellWidth 24 div def
+    /Tick {
+        2 dict begin
+        /y exch def
+        /x exch def
+        0 y rlineto
+        x y neg rmoveto
+        end
+    } def
+    
+    
+    newpath
+    Frame CellX Frame CellY moveto
+    0 1 3 {DivWidth 6 mul TimeRowHeight Tick} for
+    0 0.75 SolidLineStroke
+    
+    newpath
+    Frame CellX Frame CellY moveto
+    DivWidth 0 rmoveto
+    0 1 4 {DivWidth TimeRowHeight 0.8 mul Tick} for
+    DivWidth 0 rmoveto
+    0 1 4 {DivWidth TimeRowHeight 0.8 mul Tick} for
+    DivWidth 0 rmoveto
+    0 1 4 {DivWidth TimeRowHeight 0.8 mul Tick} for
+    DivWidth 0 rmoveto
+    0 1 4 {DivWidth TimeRowHeight 0.8 mul Tick} for
+    0 0.5 SolidLineStroke
+    
+    HalfHour {
+        newpath
+        Frame CellX Frame CellY moveto
+        DivWidth 2 div 0 rmoveto
+        0 1 23 {DivWidth TimeRowHeight 0.7 mul Tick} for
+        0.4 0.4 DottedLineStroke
+    } if
+    
+    end
+} def
+
+/DayDraw {  % <[month date weekday]> <frame>
+    2 dict begin
+    /Frame exch def
+    /Date  exch def
+    
+    Frame DayBorderDraw
+    Frame DayLinesDraw
+    Frame Date 2 get 5 lt TimeRowDraw
+    
+    
+    newpath
+    24 /Times-Roman F
+    Frame InteriorX Frame InteriorY moveto
+    DD 2 get Date 2 get get show
+    
+    end
+} def
+
+/HeaderDraw {  % <[month weeknum]> <frame>
+%    /Frame def
+%    /Date  def
+} def
+
+
+% <month>
+/AgendaPage {   % To add date array functionality on stack
+    /Date exch def
+    %Date 0 get Head HeaderDraw
+    Date 1 get Mon DayDraw
+    Date 2 get Tue DayDraw
+    Date 3 get Wed DayDraw
+    Date 4 get Thu DayDraw
+    Date 5 get Fri DayDraw
+    Date 6 get Sat DayDraw
+    Date 7 get Sun DayDraw
+} def
+
+%%EndProlog
+
+
+[[3 12] [3 22 0] [3 23 1] [3 24 2] [3 25 3] [3 26 4] [3 27 5] [3 28 6]] AgendaPage showpage
+[[3 13] [3 29 0] [3 30 1] [3 31 2] [4  1 3] [4  2 4] [4  3 5] [4  4 6]] AgendaPage showpage
+[[4 14] [4  5 0] [4  6 1] [4  7 2] [4  8 3] [4  9 4] [4 10 5] [4 11 6]] AgendaPage showpage
+%[[4 15] [4 12 0] [4 13 1] [4 14 2] [4 15 3] [4 16 4] [4 17 5] [4 18 6]] AgendaPage
+%[[4 16] [4 19 0] [4 20 1] [4 21 2] [4 22 3] [4 23 4] [4 24 5] [4 25 6]] AgendaPage
+%[[4 17] [4 26 0] [4 27 1] [4 28 2] [4 29 3] [4 30 4] [5  1 5] [5  2 6]] AgendaPage
+
+
+
+
+
+%72 504 moveto
+%DD 1 get 4 get show
+%newpath
+% 36 540 moveto
+%396 540 lineto
+%396  36 lineto
+% 36  36 lineto
+% 36 540 lineto
+%2 setlinewidth
+%stroke
+%showpage
